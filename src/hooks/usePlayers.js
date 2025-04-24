@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const backendUrl = "http://16.171.60.61:5000/api/players";
+const backendUrl = "https://ec2.publicvm.com/api/players";
 
 const usePlayers = () => {
   const [players, setPlayers] = useState([]);
