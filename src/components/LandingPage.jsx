@@ -40,57 +40,65 @@ const renderTable = (data, type) => {
 
   return (
     <div className="w-full md:w-1/2 p-4">
-      <div className="flex items-center justify-center mb-4">
-        {/* CL or UL Trophy Image */}
+      {/* Trophy Image */}
+      <div className="flex justify-center mb-2">
         <img
-          src={type === "cl" ? "/src/assets/CL.jpg" : "/src/assets/ul.jpg"}
+          src={type === "cl" ? "/assets/CL.jpg" : "/assets/ul.jpg"}
           alt={type === "cl" ? "Champions League Trophy" : "UEFA League Trophy"}
-          className="w-16 h-16 mr-4"
+          className="h-16 object-contain"
         />
-        <h2 className="text-xl font-semibold text-center">
-          {type === "cl" ? "Champions League Wins" : "UEFA League Wins"}
-        </h2>
       </div>
+      <h2 className="text-xl font-semibold mb-4 text-center">
+        {type === "cl" ? "Champions League Wins" : "UEFA League Wins"}
+      </h2>
+
       <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border border-gray-300 rounded-lg shadow-md bg-white">
-          <thead>
-            <tr className="bg-gray-100 text-gray-700 text-left">
-              <th className="p-3">Rank</th>
-              <th className="p-3">Player</th>
-              <th className="p-3">Age</th>
-              <th className="p-3">Represents</th>
-              <th className="p-3">Supporting</th>
-              <th className="p-3">{type.toUpperCase()} Wins</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rankedData.map((player) => (
-              <tr key={player._id} className="border-t hover:bg-gray-50">
-                <td className="p-3 font-medium">{player.rank}</td>
-                <td className="p-3 flex items-center gap-2">
-                  <img
-                    src={player.profilePictureUrl || "https://i.pravatar.cc/150?img=3"}
-                    alt="player"
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <span>{player.name}</span>
-                </td>
-                <td className="p-3 font-normal">{calculateAge(player.birthDate)}</td>
-                <td className="p-3">
-                  <img
-                    src={`https://flagcdn.com/w320/${countryCodeMap[player.nationality]?.code.toLowerCase() || "un"}.png`}
-                    alt={player.nationality}
-                    style={{ width: 24, height: 16 }}
-                  />
-                </td>
-                <td className="p-3">{player.favoriteClub}</td>
-                <td className="p-3">
-                  {type === "cl" ? player.clWins : player.ulWins}
-                </td>
+        <div className="min-w-[600px] w-full">
+          <table className="w-full table-fixed border border-gray-300 rounded-lg shadow-md bg-white text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-gray-700 text-left">
+                <th className="p-2 w-[40px]">Rank</th>
+                <th className="p-2 w-[150px]">Player</th>
+                <th className="p-2 w-[50px]">Age</th>
+                <th className="p-2 w-[60px]">Rep.</th>
+                <th className="p-2 w-[100px]">Club</th>
+                <th className="p-2 w-[50px]">{type.toUpperCase()} Wins</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rankedData.map((player) => (
+                <tr key={player._id} className="border-t hover:bg-gray-50">
+                  <td className="p-2">{player.rank}</td>
+                  <td className="p-2 flex items-center gap-2">
+                    <img
+                      src={
+                        player.profilePictureUrl ||
+                        "https://i.pravatar.cc/150?img=3"
+                      }
+                      alt="player"
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <span className="truncate">{player.name}</span>
+                  </td>
+                  <td className="p-2">{calculateAge(player.birthDate)}</td>
+                  <td className="p-2">
+                    <img
+                      src={`https://flagcdn.com/w320/${
+                        countryCodeMap[player.nationality]?.code.toLowerCase() || "un"
+                      }.png`}
+                      alt={player.nationality}
+                      className="w-6 h-4 object-cover"
+                    />
+                  </td>
+                  <td className="p-2">{player.favoriteClub}</td>
+                  <td className="p-2">
+                    {type === "cl" ? player.clWins : player.ulWins}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
