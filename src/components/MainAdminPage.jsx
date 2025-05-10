@@ -46,7 +46,10 @@ const MainAdminPage = () => {
                 player={player} // Pass individual player as prop
                 setPlayers={setPlayers}
                 deletePlayer={deletePlayer}
-                setEditPlayer={setEditPlayer}
+                setEditPlayer={(player) => {
+                  setEditPlayer(player);
+                  window.scrollTo({ top: 0, behavior: "smooth" }); // 👈 scroll to top
+                }}
               />
             ))}
           </div>

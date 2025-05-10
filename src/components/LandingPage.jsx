@@ -1,7 +1,6 @@
 import React from "react";
-import countryCodeMap from "../countryCodeMap"; 
+import countryCodeMap from "../countryCodeMap";
 import { Link } from "react-router-dom";
-
 
 const assignSharedRanks = (data, key) => {
   let lastValue = null;
@@ -32,73 +31,73 @@ const calculateAge = (birthDate) => {
   return age;
 };
 
-
-const renderTable = (data, type) => {
-  const key = type === "cl" ? "clWins" : "ulWins";
+const renderMobileTable = (data) => {
+  const key = "clWins";
   const sortedData = [...data].sort((a, b) => b[key] - a[key]);
   const rankedData = assignSharedRanks(sortedData, key);
 
   return (
-    <div className="w-full md:w-1/2 p-4">
-      {/* Trophy Image */}
+    <div className="w-full px-2">
       <div className="flex justify-center mb-2">
         <img
-          src={type === "cl" ? "/assets/CL.jpg" : "/assets/ul.jpg"}
-          alt={type === "cl" ? "Champions League Trophy" : "UEFA League Trophy"}
+          src="/assets/CL.jpg"
+          alt="Champions League Trophy"
           className="h-16 object-contain"
         />
       </div>
       <h2 className="text-xl font-semibold mb-4 text-center">
-        {type === "cl" ? "Champions League Wins" : "UEFA League Wins"}
+        Champions League Wins
       </h2>
 
-      <div className="overflow-x-auto">
-        <div className="min-w-[600px] w-full">
-          <table className="w-full table-fixed border border-gray-300 rounded-lg shadow-md bg-white text-sm">
-            <thead>
-              <tr className="bg-gray-100 text-gray-700 text-left">
-                <th className="p-2 w-[40px]">Rank</th>
-                <th className="p-2 w-[150px]">Player</th>
-                <th className="p-2 w-[50px]">Age</th>
-                <th className="p-2 w-[60px]">Rep.</th>
-                <th className="p-2 w-[100px]">Club</th>
-                <th className="p-2 w-[50px]">{type.toUpperCase()} Wins</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rankedData.map((player) => (
-                <tr key={player._id} className="border-t hover:bg-gray-50">
-                  <td className="p-2">{player.rank}</td>
-                  <td className="p-2 flex items-center gap-2">
-                    <img
-                      src={
-                        player.profilePictureUrl ||
-                        "https://i.pravatar.cc/150?img=3"
-                      }
-                      alt="player"
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                    <span className="truncate">{player.name}</span>
-                  </td>
-                  <td className="p-2">{calculateAge(player.birthDate)}</td>
-                  <td className="p-2">
-                    <img
-                      src={`https://flagcdn.com/w320/${
-                        countryCodeMap[player.nationality]?.code.toLowerCase() || "un"
-                      }.png`}
-                      alt={player.nationality}
-                      className="w-6 h-4 object-cover"
-                    />
-                  </td>
-                  <td className="p-2">{player.favoriteClub}</td>
-                  <td className="p-2">
-                    {type === "cl" ? player.clWins : player.ulWins}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="space-y-4">
+        {rankedData.map((player) => (
+          <div
+            key={player._id}
+            className="flex items-center bg-white px-5 py-4 rounded-xl shadow-md w-full"
+          >
+            {/* CL Wins Label + Number */}
+            <div className="w-16 text-center text-sm text-gray-600">
+              <div className="text-xs">CL Wins:</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {player.clWins}
+              </div>
+            </div>
+
+            {/* Profile Picture */}
+            <div className="mx-4">
+              <img
+                src={
+                  player.profilePictureUrl ||
+                  "https://i.pravatar.cc/150?img=3"
+                }
+                alt="player"
+                className="w-14 h-18 object-cover border rounded-md"
+              />
+            </div>
+
+            {/* Name, Age, Club */}
+            <div className="flex-1 text-sm">
+              <div className="font-semibold text-base">{player.name}</div>
+              <div className="text-gray-600 text-xs">
+                Age: {calculateAge(player.birthDate)}
+              </div>
+              <div className="text-gray-600 text-xs">
+                Club: {player.favoriteClub}
+              </div>
+            </div>
+
+            {/* Flag */}
+            <div className="ml-2">
+              <img
+                src={`https://flagcdn.com/w80/${
+                  countryCodeMap[player.nationality]?.code.toLowerCase() || "un"
+                }.png`}
+                alt={player.nationality}
+                className="w-6 h-4 object-cover"
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -107,17 +106,14 @@ const renderTable = (data, type) => {
 
 const LandingPage = ({ players }) => {
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 pb-12">
       <Link to="/admin-login">
         <button className="absolute top-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
           Admin
         </button>
       </Link>
-      <h1 className="text-3xl font-bold text-center mb-8">Rankings</h1>
-      <div className="flex flex-col md:flex-row">
-        {renderTable(players, "cl")}
-        {renderTable(players, "ul")}
-      </div>
+      <h1 className="text-3xl font-bold text-center mb-6">Rankings</h1>
+      {renderMobileTable(players)}
     </div>
   );
 };

@@ -8,7 +8,7 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
   const [favoriteClub, setFavoriteClub] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [clWins, setclWins] = useState("");
-  const [ulWins, setulWins] = useState("");
+  //const [ulWins, setulWins] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState ("");
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -21,13 +21,13 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
       setFavoriteClub(editPlayer.favoriteClub);
       setBirthDate(editPlayer.birthDate ? editPlayer.birthDate.slice(0, 10) : "");
       setclWins(editPlayer.clWins);
-      setulWins(editPlayer.ulWins);
+      //setulWins(editPlayer.ulWins);
       setProfilePictureUrl(editPlayer.profilePictureUrl);
     }
   }, [editPlayer]);
 
   // Check if all required fields are filled
-  const isFormValid = name && nationality && favoriteClub && birthDate && clWins && ulWins;
+  const isFormValid = name && nationality && favoriteClub && birthDate && clWins;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
       favoriteClub,
       birthDate,
       clWins,
-      ulWins,
+      //ulWins,
       profilePictureUrl,
     };
 
@@ -65,7 +65,7 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
         setFavoriteClub("");
         setBirthDate("");
         setclWins(0);
-        setulWins(0);
+        //setulWins(0);
         setProfilePictureUrl("");
       } catch (error) {
         console.error("Error updating player:", error);
@@ -83,7 +83,7 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
         setFavoriteClub("");
         setBirthDate("");
         setclWins();
-        setulWins();
+        //setulWins();
         setProfilePictureUrl("");
       } catch (error) {
         console.error("Error adding player:", error);
@@ -148,16 +148,6 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
           id="clWins"
           value={clWins}
           onChange={(e) => setclWins(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-      </div>
-      <div>
-        <label htmlFor="ulWins" className="block">Number of UL wins</label>
-        <input
-          type="number"
-          id="ulWins"
-          value={ulWins}
-          onChange={(e) => setulWins(e.target.value)}
           className="w-full p-2 border rounded"
         />
       </div>

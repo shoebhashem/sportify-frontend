@@ -1,4 +1,4 @@
-import { Card, CardContent } from "./ui/Card";
+import { Card } from "./ui/Card";
 import { Button } from "./ui/Button";
 import { Pencil, Trash2 } from "lucide-react";
 import countryCodeMap from "../countryCodeMap";
@@ -18,19 +18,20 @@ const PlayerCard = ({ player, deletePlayer, setEditPlayer }) => {
   const flagUrl = flagData ? flagData.flag : "";
 
   return (
-    <Card className="flex items-center justify-between gap-4 p-4 w-full shadow-md rounded-xl">
-      <div className="flex items-center gap-4">
+    <Card className="w-full p-4 shadow-md rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* Left Section: Image + Info */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         {profilePictureUrl && (
           <img
             src={profilePictureUrl}
             alt={`${name}'s profile`}
-            className="w-16 h-16 object-cover rounded-full border border-gray-300"
+            className="w-20 h-20 object-cover rounded-full border border-gray-300"
           />
         )}
-        <div>
-          <h2 className="text-xl font-semibold">{name}</h2>
+        <div className="text-center sm:text-left">
+          <h2 className="text-lg font-semibold">{name}</h2>
           <p className="text-sm text-muted-foreground">{favoriteClub}</p>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
             {flagUrl && (
               <img
                 src={flagUrl}
@@ -42,11 +43,15 @@ const PlayerCard = ({ player, deletePlayer, setEditPlayer }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center">
+
+      {/* Stats Section */}
+      <div className="text-center sm:text-left">
         <p className="text-sm font-semibold">CL Wins: {clWins}</p>
-        <p className="text-sm font-semibold">UL Wins: {ulWins}</p>
+        {/* <p className="text-sm font-semibold">UL Wins: {ulWins}</p> */}
       </div>
-      <div className="flex gap-2">
+
+      {/* Buttons */}
+      <div className="flex justify-center sm:justify-end gap-2">
         <Button variant="outline" size="icon" onClick={() => setEditPlayer(player)}>
           <Pencil className="w-4 h-4" />
         </Button>
