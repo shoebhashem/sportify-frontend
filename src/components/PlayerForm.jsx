@@ -27,7 +27,7 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
   }, [editPlayer]);
 
   // Check if all required fields are filled
-  const isFormValid = name && nationality && favoriteClub && birthDate && clWins;
+  const isFormValid = name && nationality && favoriteClub && clWins;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
