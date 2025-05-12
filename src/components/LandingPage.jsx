@@ -31,7 +31,7 @@ const calculateAge = (birthDate) => {
   return age;
 };
 
-const renderMobileTable = (data) => {
+const renderMobileTable = (data, totalPlayers) => {
   const key = "clWins";
   const sortedData = [...data].sort((a, b) => b[key] - a[key]);
   const rankedData = assignSharedRanks(sortedData, key);
@@ -48,6 +48,9 @@ const renderMobileTable = (data) => {
       <h2 className="text-xl font-semibold mb-4 text-center">
         Champions League Wins
       </h2>
+      <p className="text-sm text-gray-600 text-center mb-4">
+        Total number of players: {totalPlayers}
+      </p>
 
       <div className="space-y-4">
         {rankedData.map((player) => (
@@ -106,14 +109,25 @@ const renderMobileTable = (data) => {
 
 const LandingPage = ({ players }) => {
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-12">
-      <Link to="/admin-login">
-        <button className="absolute top-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
-          Admin
-        </button>
-      </Link>
-      <h1 className="text-3xl font-bold text-center mb-6">Rankings</h1>
-      {renderMobileTable(players)}
+    <div className="min-h-screen bg-gray-50 p-4 pb-12 text-center">
+      {/* Header Text */}
+      <h1 className="text-3xl font-bold text-blue-600 mb-4">
+        Just Good Vibes ...
+      </h1>
+
+      {/* Admin Button aligned right */}
+      <div className="flex justify-end mb-4">
+        <Link to="/admin-login">
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
+            Admin
+          </button>
+        </Link>
+      </div>
+
+      {/* Rankings Title */}
+      <h2 className="text-3xl font-bold mb-6">Rankings</h2>
+
+      {renderMobileTable(players, players.length)}
     </div>
   );
 };
