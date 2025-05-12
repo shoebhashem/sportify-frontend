@@ -43,16 +43,16 @@ const LandingPage = ({ players }) => {
     <div className="min-h-screen bg-gray-50 p-4 pb-12 text-center relative">
       {/* Modal for Enlarged Image */}
       {modalImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 transition-all duration-300">
-          <div className="relative">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 transition-all duration-300 p-4">
+          <div className="relative max-w-[90vw] max-h-[90vh]">
             <img
               src={modalImage}
               alt="Enlarged player"
-              className="max-w-full max-h-[90vh] rounded-lg shadow-lg transform scale-100 transition-transform duration-300"
+              className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
             />
             <button
               onClick={closeImageModal}
-              className="absolute -top-4 -right-4 bg-white text-black rounded-full w-8 h-8 text-lg font-bold shadow-lg hover:bg-red-500 hover:text-white transition"
+              className="absolute top-2 right-2 bg-white text-black rounded-full w-8 h-8 text-lg font-bold shadow-lg hover:bg-red-500 hover:text-white transition"
               aria-label="Close"
             >
               &times;
@@ -60,6 +60,7 @@ const LandingPage = ({ players }) => {
           </div>
         </div>
       )}
+
 
       <h1 className="text-3xl font-bold text-blue-600 mb-4">
         Just Good Vibes ...
