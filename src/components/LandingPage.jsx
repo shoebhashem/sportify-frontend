@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import countryCodeMap from "../countryCodeMap";
 import { Link } from "react-router-dom";
+import HamburgerMenu from "./HamburgerMenu";
+
 
 const assignSharedRanks = (data, key) => {
   let lastValue = null;
@@ -61,32 +63,37 @@ const LandingPage = ({ players }) => {
         </div>
       )}
 
+      <div className="flex flex-col items-end sm:items-center sm:flex-row sm:justify-between mb-4">
+        <div className="sm:order-2">
+          <HamburgerMenu />
+        </div>
+        <h1 className="text-3xl font-bold text-blue-600 sm:order-1 mt-2 sm:mt-0 text-right sm:text-center w-full sm:w-auto">
+          Just Good Vibes
+        </h1>
+      </div>
 
-      <h1 className="text-3xl font-bold text-blue-600 mb-4">
-        Just Good Vibes ...
-      </h1>
 
-      <div className="flex justify-end mb-4">
+      {/*<div className="flex justify-end mb-4">
         <Link to="/admin-login">
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
             Admin
           </button>
         </Link>
-      </div>
+      </div>*/}
 
       <h2 className="text-3xl font-bold mb-6">Rankings</h2>
 
       <div className="w-full px-2">
-        <div className="flex justify-center mb-2">
+        {/*<div className="flex justify-center mb-2">
           <img
             src="/assets/CL.jpg"
             alt="Champions League Trophy"
             className="h-16 object-contain"
           />
-        </div>
-        <h2 className="text-xl font-semibold mb-4 text-center">
+        </div>/*}
+        {/*<h2 className="text-xl font-semibold mb-4 text-center">
           Champions League Wins
-        </h2>
+        </h2>*/}
         <p className="text-sm text-gray-600 text-center mb-4">
           Total number of players: {players.length}
         </p>
