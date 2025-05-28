@@ -63,23 +63,14 @@ const LandingPage = ({ players }) => {
         </div>
       )}
 
-      <div className="flex flex-col items-end sm:items-center sm:flex-row sm:justify-between mb-4">
-        <div className="sm:order-2">
-          <HamburgerMenu />
-        </div>
-        <h1 className="text-3xl font-bold text-blue-600 sm:order-1 mt-2 sm:mt-0 text-right sm:text-center w-full sm:w-auto">
+      <div className="flex flex-col items-center mb-4">
+        <h1 className="text-3xl font-bold text-blue-600 text-center w-full">
           Just Good Vibes
         </h1>
+        <div className="self-end mt-2">
+          <HamburgerMenu />
+        </div>
       </div>
-
-
-      {/*<div className="flex justify-end mb-4">
-        <Link to="/admin-login">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
-            Admin
-          </button>
-        </Link>
-      </div>*/}
 
       <h2 className="text-3xl font-bold mb-6">Rankings</h2>
 
