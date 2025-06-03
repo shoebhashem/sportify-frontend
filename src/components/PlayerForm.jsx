@@ -48,6 +48,7 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
       // Perform a PATCH request to update the player
       try {
         const response = await axios.patch(`${backendUrl}/${editPlayer._id}`, newPlayer);
+        
         // Update the player list with the modified player immediately
         setPlayers((prevPlayers) =>
           prevPlayers.map((player) =>
@@ -69,7 +70,25 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
         setProfilePictureUrl("");
       } catch (error) {
         console.error("Error updating player:", error);
-        setSuccessMessage("Error updating player. Please try again.");
+        
+        // More detailed error messages based on response
+        if (error.response) {
+          const { status, data } = error.response;
+          
+          if (status === 404) {
+            setSuccessMessage("Player not found. Please refresh and try again.");
+          } else if (status === 400) {
+            setSuccessMessage(`Validation error: ${data.details || data.error || "Invalid data provided."}`);
+          } else if (status >= 500) {
+            setSuccessMessage("Server error. Please try again later.");
+          } else {
+            setSuccessMessage(`Error: ${data.error || "Failed to update player."}`);
+          }
+        } else if (error.request) {
+          setSuccessMessage("Network error. Please check your connection.");
+        } else {
+          setSuccessMessage("Error updating player. Please try again.");
+        }
       }
     } else {
       // Perform a POST request to add a new player
