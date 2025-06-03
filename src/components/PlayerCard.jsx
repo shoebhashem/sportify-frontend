@@ -33,11 +33,19 @@ const PlayerCard = ({ player, deletePlayer, setEditPlayer }) => {
           <p className="text-sm text-muted-foreground">{favoriteClub}</p>
           <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
             {flagUrl && (
-              <img
-                src={flagUrl}
-                alt={`${nationality} flag`}
-                className="w-6 h-4 object-cover rounded-sm"
-              />
+              <div className="flex flex-col items-center">
+                {/* Admin Badge - moved above flag */}
+                {player.admin && (
+                  <div className="bg-blue-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center mb-1">
+                    S
+                  </div>
+                )}
+                <img
+                  src={flagUrl}
+                  alt={`${nationality} flag`}
+                  className="w-6 h-4 object-cover rounded-sm"
+                />
+              </div>
             )}
             <span className="text-sm">{nationality}</span>
           </div>

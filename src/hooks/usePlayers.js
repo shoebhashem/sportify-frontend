@@ -13,23 +13,21 @@ const usePlayers = () => {
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
+        // FORCE CLEAR CACHE for debugging admin functionality
+        localStorage.removeItem("playersData");
+        localStorage.removeItem("playersVersion");
+        
         // Get latest version from backend
         const versionRes = await axios.get(`${config.backendUrl}/version`);
         const latestVersion = versionRes.data.version;
 
-        const cachedVersion = localStorage.getItem(versionKey);
-        const cachedData = localStorage.getItem(dataKey);
-
-        if (cachedVersion === String(latestVersion) && cachedData) {
-          // Use cached data
-          setPlayers(JSON.parse(cachedData));
-        } else {
-          // Fetch fresh data
-          const response = await axios.get(`${config.backendUrl}/`);
-          setPlayers(response.data);
-          localStorage.setItem(dataKey, JSON.stringify(response.data));
-          localStorage.setItem(versionKey, String(latestVersion));
-        }
+        // Always fetch fresh data for now (bypassing cache)
+        console.log('🔍 Debug: Fetching fresh data from:', config.backendUrl);
+        const response = await axios.get(`${config.backendUrl}/`);
+        console.log('🔍 Debug: Received players:', response.data);
+        setPlayers(response.data);
+        localStorage.setItem(dataKey, JSON.stringify(response.data));
+        localStorage.setItem(versionKey, String(latestVersion));
       } catch (err) {
         setError(err);
         console.error("Error fetching players:", err);

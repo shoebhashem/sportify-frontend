@@ -16,6 +16,9 @@ const MainAdminPage = () => {
     navigate("/");
   };
 
+  // Sort players alphabetically by name
+  const sortedPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="flex justify-between items-center mb-6">
@@ -39,8 +42,9 @@ const MainAdminPage = () => {
           setEditPlayer={setEditPlayer} // Allow form to update the player state
         />
           <div className="mt-8">
-            {/* Loop through players to display each one */}
-            {players.map((player) => (
+            <h2 className="text-xl font-semibold mb-4">Players (Alphabetical Order)</h2>
+            {/* Loop through sorted players to display each one */}
+            {sortedPlayers.map((player) => (
               <PlayerCard
                 key={player._id} // Make sure to add a unique key for each player
                 player={player} // Pass individual player as prop

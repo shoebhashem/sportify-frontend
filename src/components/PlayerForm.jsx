@@ -8,6 +8,9 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
   const [favoriteClub, setFavoriteClub] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [clWins, setclWins] = useState("");
+  const [admin, setAdmin] = useState(false);
+  const [description, setDescription] = useState("");
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   //const [ulWins, setulWins] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState ("");
   const [loading, setLoading] = useState(false);
@@ -21,6 +24,8 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
       setFavoriteClub(editPlayer.favoriteClub);
       setBirthDate(editPlayer.birthDate ? editPlayer.birthDate.slice(0, 10) : "");
       setclWins(editPlayer.clWins);
+      setAdmin(editPlayer.admin || false);
+      setDescription(editPlayer.description || "");
       //setulWins(editPlayer.ulWins);
       setProfilePictureUrl(editPlayer.profilePictureUrl);
     }
@@ -37,6 +42,8 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
       favoriteClub,
       birthDate,
       clWins,
+      admin,
+      description,
       //ulWins,
       profilePictureUrl,
     };
@@ -47,7 +54,13 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
     if (editPlayer) {
       // Perform a PATCH request to update the player
       try {
+        console.log('🔍 Debug: Updating player with ID:', editPlayer._id);
+        console.log('🔍 Debug: Update data:', newPlayer);
+        console.log('🔍 Debug: Backend URL:', backendUrl);
+        
         const response = await axios.patch(`${backendUrl}/${editPlayer._id}`, newPlayer);
+        
+        console.log('🔍 Debug: Update response:', response.data);
         
         // Update the player list with the modified player immediately
         setPlayers((prevPlayers) =>
@@ -66,10 +79,13 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
         setFavoriteClub("");
         setBirthDate("");
         setclWins(0);
+        setAdmin(false);
+        setDescription("");
         //setulWins(0);
         setProfilePictureUrl("");
       } catch (error) {
-        console.error("Error updating player:", error);
+        console.error("🔍 Debug: Error updating player:", error);
+        console.error("🔍 Debug: Error response:", error.response?.data);
         
         // More detailed error messages based on response
         if (error.response) {
@@ -102,6 +118,8 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
         setFavoriteClub("");
         setBirthDate("");
         setclWins();
+        setAdmin(false);
+        setDescription("");
         //setulWins();
         setProfilePictureUrl("");
       } catch (error) {
@@ -170,6 +188,21 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
           className="w-full p-2 border rounded"
         />
       </div>
+      
+      <div>
+        <label htmlFor="admin" className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="admin"
+            checked={admin}
+            onChange={(e) => setAdmin(e.target.checked)}
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <span className="text-sm font-medium text-gray-700">Admin User</span>
+        </label>
+        <p className="text-xs text-gray-500 mt-1">Check this box if the player should have admin rights</p>
+      </div>
+      
       <div>
         <label htmlFor="profilePictureUrl" className="block">Picture URL</label>
         <input
@@ -180,6 +213,47 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
           className="w-full p-2 border rounded"
         />
       </div>
+
+      {/* About the Player Button */}
+      <div>
+        <button
+          type="button"
+          onClick={() => setShowDescriptionModal(true)}
+          className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded"
+        >
+          About the Player
+        </button>
+      </div>
+
+      {/* Description Modal */}
+      {showDescriptionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold mb-4">About the Player</h3>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Write something about this player..."
+              rows={6}
+              className="w-full p-3 border rounded-lg resize-none"
+            />
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => setShowDescriptionModal(false)}
+                className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setShowDescriptionModal(false)}
+                className="flex-1 py-2 px-4 bg-gray-600 hover:bg-gray-700 text-white rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Display loading or success message */}
       {loading && <p className="text-blue-500">Updating player...</p>}
