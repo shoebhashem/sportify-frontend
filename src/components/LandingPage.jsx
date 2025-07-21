@@ -83,13 +83,12 @@ const LandingPage = ({ players }) => {
         </div>
       )}
 
-      {/* Header with hamburger menu in top right */}
-      <div className="flex justify-end mb-3">
+      {/* Header with hamburger menu and centered title */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="w-10"></div> {/* Spacer for balance */}
+        <h1 className="text-3xl font-bold">Rankings</h1>
         <HamburgerMenu />
       </div>
-
-      {/* Main Title - centrally located, moved closer to hamburger menu */}
-      <h1 className="text-3xl font-bold mb-4">Rankings</h1>
 
       <div className="w-full px-2">
         {/*<div className="flex justify-center mb-2">
@@ -113,8 +112,11 @@ const LandingPage = ({ players }) => {
               className="flex items-center bg-white px-5 py-4 rounded-xl shadow-md w-full cursor-pointer hover:bg-gray-50 transition-colors"
               onClick={() => openPlayerModal(player)}
             >
-              {/* CL Wins */}
+              {/* Rank and CL Wins */}
               <div className="w-16 text-center text-sm text-gray-600">
+                <div className="text-lg font-bold text-gray-800 mb-1">
+                  {rankedData.indexOf(player) + 1}
+                </div>
                 <div className="text-xs">CL Wins:</div>
                 <div className="text-2xl font-bold text-blue-600">
                   {player.clWins}
