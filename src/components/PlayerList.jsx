@@ -20,7 +20,7 @@ const PlayerList = ({ players, deletePlayer, setEditPlayer }) => {
             <p><strong>Nationality:</strong> {player.nationality}</p>
             <p><strong>Club:</strong> {player.favoriteClub}</p>
             <p><strong>CL Wins:</strong> {player.clWins}</p>
-            <p><strong>UL Wins:</strong> {player.ulWins}</p>
+            <p><strong>EL Wins:</strong> {player.ulWins}</p>
 
             <div className="flex justify-between mt-4">
               <button

@@ -4,6 +4,7 @@ import LandingPage from "./components/LandingPage";
 import AdminLoginPage from "./components/AdminLoginPage";
 import MainAdminPage from "./components/MainAdminPage";
 import AboutPage from "./components/AboutPage";
+import SessionsPage from "./components/SessionsPage";
 import usePlayers from "./hooks/usePlayers";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage players={players} />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/sessions" element={<SessionsPage />} />
         <Route path="/admin-login" element={<AdminLoginPage setIsAuthenticated={setIsAuthenticated} />} />
         <Route
           path="/admin"

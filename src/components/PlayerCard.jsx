@@ -2,8 +2,11 @@ import { Card } from "./ui/Card";
 import { Button } from "./ui/Button";
 import { Pencil, Trash2 } from "lucide-react";
 import countryCodeMap from "../countryCodeMap";
+import { useState } from "react";
 
 const PlayerCard = ({ player, deletePlayer, setEditPlayer }) => {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
   const {
     _id,
     name,
@@ -16,6 +19,19 @@ const PlayerCard = ({ player, deletePlayer, setEditPlayer }) => {
 
   const flagData = countryCodeMap[nationality];
   const flagUrl = flagData ? flagData.flag : "";
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deletePlayer(_id);
+    setShowDeleteConfirm(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+  };
 
   return (
     <Card className="w-full p-4 shadow-md rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -63,10 +79,30 @@ const PlayerCard = ({ player, deletePlayer, setEditPlayer }) => {
         <Button variant="outline" size="icon" onClick={() => setEditPlayer(player)}>
           <Pencil className="w-4 h-4" />
         </Button>
-        <Button variant="destructive" size="icon" onClick={() => deletePlayer(_id)}>
+        <Button variant="destructive" size="icon" onClick={handleDeleteClick}>
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold mb-2">Confirm Delete</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete <span className="font-semibold">{name}</span>? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={handleCancelDelete}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleConfirmDelete}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

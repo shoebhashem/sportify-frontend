@@ -35,6 +35,13 @@ const HamburgerMenu = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg">
           <Link
+            to="/sessions"
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Sessions
+          </Link>
+          <Link
             to="/admin-login"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
             onClick={() => setIsOpen(false)}

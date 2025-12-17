@@ -34,22 +34,23 @@ const calculateAge = (birthDate) => {
 const LandingPage = ({ players }) => {
   const [modalImage, setModalImage] = useState(null);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [filterType, setFilterType] = useState("totWins"); // Default filter
 
   const openImageModal = (url) => setModalImage(url);
   const closeImageModal = () => setModalImage(null);
   const openPlayerModal = (player) => setSelectedPlayer(player);
   const closePlayerModal = () => setSelectedPlayer(null);
 
-  const key = "clWins";
+  const key = filterType;
   
-  // Enhanced sorting: Primary by CL wins (descending), Secondary by age (oldest first for ties)
+  // Enhanced sorting: Primary by selected filter (descending), Secondary by age (oldest first for ties)
   const sortedData = [...players].sort((a, b) => {
-    // First, sort by CL wins (descending - higher wins first)
+    // First, sort by selected filter (descending - higher wins first)
     if (b[key] !== a[key]) {
       return b[key] - a[key];
     }
     
-    // If CL wins are equal, sort by age (descending - older players first)
+    // If values are equal, sort by age (descending - older players first)
     const ageA = calculateAge(a.birthDate);
     const ageB = calculateAge(b.birthDate);
     return ageB - ageA;
@@ -57,12 +58,20 @@ const LandingPage = ({ players }) => {
   
   const rankedData = assignSharedRanks(sortedData, key);
 
+  // Get filter label
+  const filterLabels = {
+    totWins: "Total Wins",
+    clWins: "CL Wins",
+    ulWins: "EL Wins"
+  };
+
   // Debug logging to see what data we're getting
   console.log('🔍 Debug: Players data in LandingPage:', players);
   console.log('🔍 Debug: Admin players:', players.filter(p => p.admin));
+  console.log('🔍 Debug: Current filter:', filterType);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-12 text-center relative">
+    <div className="min-h-screen bg-gray-70 p-4 pb-12 text-center relative">
       {/* Modal for Enlarged Image */}
       {modalImage && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 transition-all duration-300 p-4">
@@ -90,6 +99,40 @@ const LandingPage = ({ players }) => {
         <HamburgerMenu />
       </div>
 
+      {/* Filter Buttons */}
+      <div className="flex justify-center gap-2 mb-6">
+        <button
+          onClick={() => setFilterType("totWins")}
+          className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+            filterType === "totWins"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+          }`}
+        >
+          Total Wins
+        </button>
+        <button
+          onClick={() => setFilterType("clWins")}
+          className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+            filterType === "clWins"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+          }`}
+        >
+          CL Wins
+        </button>
+        <button
+          onClick={() => setFilterType("ulWins")}
+          className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+            filterType === "ulWins"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+          }`}
+        >
+          EL Wins
+        </button>
+      </div>
+
       <div className="w-full px-2">
         {/*<div className="flex justify-center mb-2">
           <img
@@ -112,14 +155,21 @@ const LandingPage = ({ players }) => {
               className="flex items-center bg-white px-5 py-4 rounded-xl shadow-md w-full cursor-pointer hover:bg-gray-50 transition-colors"
               onClick={() => openPlayerModal(player)}
             >
-              {/* Rank and CL Wins */}
-              <div className="w-16 text-center text-sm text-gray-600">
+              {/* Rank and All Wins Types */}
+              <div className="text-center text-sm text-gray-600 min-w-fit">
                 <div className="text-lg font-bold text-gray-800 mb-1">
                   {rankedData.indexOf(player) + 1}
                 </div>
-                <div className="text-xs">CL Wins:</div>
-                <div className="text-2xl font-bold text-blue-600">
-                  {player.clWins}
+                <div className="space-y-1">
+                  <div className="text-xs">
+                    <span className="font-semibold">Tot:</span> <span className="text-blue-600 font-bold">{player.totWins}</span>
+                  </div>
+                  <div className="text-xs">
+                    <span className="font-semibold">CL:</span> <span className="text-green-600 font-bold">{player.clWins}</span>
+                  </div>
+                  <div className="text-xs">
+                    <span className="font-semibold">UL:</span> <span className="text-purple-600 font-bold">{player.ulWins}</span>
+                  </div>
                 </div>
               </div>
 
