@@ -168,7 +168,7 @@ const LandingPage = ({ players }) => {
                     <span className="font-semibold">CL:</span> <span className="text-green-600 font-bold">{player.clWins}</span>
                   </div>
                   <div className="text-xs">
-                    <span className="font-semibold">UL:</span> <span className="text-purple-600 font-bold">{player.ulWins}</span>
+                    <span className="font-semibold">EL:</span> <span className="text-purple-600 font-bold">{player.ulWins}</span>
                   </div>
                 </div>
               </div>
