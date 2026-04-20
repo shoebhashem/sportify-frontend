@@ -4,13 +4,14 @@ import { backendUrl } from "../config";
 import SessionDetailModal from "./SessionDetailModal";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
-import { Calendar, Users, Trophy, Trash2 } from "lucide-react";
+import { Calendar, Users, Trophy, Trash2, Edit2 } from "lucide-react";
 
 const AdminSessionsPage = ({ players }) => {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState(null);
 
@@ -37,6 +38,7 @@ const AdminSessionsPage = ({ players }) => {
       setSessions([response.data, ...sessions]); // Add to top of list
       // Auto-open the new session
       setSelectedSession(response.data);
+      setIsEditMode(false);
       setShowModal(true);
     } catch (error) {
       console.error("Error creating session:", error);
@@ -44,10 +46,19 @@ const AdminSessionsPage = ({ players }) => {
     }
   };
 
-  // Open session detail modal
+  // Open session for viewing/editing
   const handleSessionClick = (session) => {
     console.log("Session clicked:", session.name);
     setSelectedSession(session);
+    setIsEditMode(false);
+    setShowModal(true);
+  };
+
+  // Edit session
+  const handleEditSession = (session) => {
+    console.log("Edit button clicked:", session.name);
+    setSelectedSession(session);
+    setIsEditMode(true);
     setShowModal(true);
   };
 
@@ -55,6 +66,7 @@ const AdminSessionsPage = ({ players }) => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedSession(null);
+    setIsEditMode(false);
     fetchSessions(); // Refresh list
   };
 
@@ -143,6 +155,16 @@ const AdminSessionsPage = ({ players }) => {
                     </p>
                   </div>
                   <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditSession(session);
+                    }}
+                    className="p-2 text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                    title="Edit session"
+                  >
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+                  <button
                     onClick={(e) => handleDeleteClick(e, session)}
                     className="p-2 text-red-500 hover:bg-red-50 rounded transition-colors"
                     title="Delete session"
@@ -163,7 +185,7 @@ const AdminSessionsPage = ({ players }) => {
             <h3 className="text-lg font-semibold mb-2">Confirm Delete</h3>
             <p className="text-gray-600 mb-6">
               Are you sure you want to delete session <span className="font-semibold">{sessionToDelete.name}</span>? 
-              This will also update player attendance counts. This action cannot be undone.
+              This will also update player attendance and win counts. This action cannot be undone.
             </p>
             <div className="flex justify-end gap-3">
               <button
@@ -188,6 +210,7 @@ const AdminSessionsPage = ({ players }) => {
         <SessionDetailModal
           session={selectedSession}
           players={players}
+          isEditMode={isEditMode}
           onClose={handleCloseModal}
         />
       )}
