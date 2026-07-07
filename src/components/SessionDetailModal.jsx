@@ -84,11 +84,6 @@ const SessionDetailModal = ({ session, players, isEditMode, onClose }) => {
     setGuests(guests.filter((_, i) => i !== index));
   };
 
-  // Save attendance in edit mode
-  const handleSaveAttendance = async () => {
-    setAttendanceSaved(true);
-  };
-
   // Review changes before saving (shows delta)
   const handleReviewChanges = async () => {
     setLoading(true);
@@ -165,7 +160,11 @@ const SessionDetailModal = ({ session, players, isEditMode, onClose }) => {
       onClose();
     } catch (error) {
       console.error("Error saving session:", error);
-      setEditError("Failed to save session. Please try again.");
+      // Close the confirmation dialog so the error banner above (which was
+      // already being set, just hidden behind this dialog's overlay) becomes
+      // visible, and the admin can adjust and retry instead of being stuck.
+      setShowDeltaConfirmation(false);
+      setEditError(error.response?.data?.error || "Failed to save session. Please try again.");
     } finally {
       setLoading(false);
     }

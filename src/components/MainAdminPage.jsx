@@ -9,7 +9,7 @@ import { Users, Calendar } from "lucide-react";
 const MainAdminPage = () => {
   const { players, setPlayers, loading, error, deletePlayer } = usePlayers();
   const [editPlayer, setEditPlayer] = useState(null);
-  const [activeTab, setActiveTab] = useState("players"); // "players" or "sessions"
+  const [activeTab, setActiveTab] = useState("sessions"); // "players" or "sessions"
   const navigate = useNavigate();
 
   const handleLogout = () => {

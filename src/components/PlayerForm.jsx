@@ -34,6 +34,14 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
   // Check if all required fields are filled
   const isFormValid = name;
 
+  // Number inputs hold "" until touched; coerce blank/invalid values to 0
+  // instead of letting an empty string reach the API (Mongoose casts "" to
+  // null for Number fields, which later breaks $inc when awarding wins).
+  const toWinCount = (value) => {
+    const n = Number(value);
+    return value === "" || value === undefined || value === null || Number.isNaN(n) ? 0 : n;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newPlayer = {
@@ -41,8 +49,8 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
       nationality,
       favoriteClub,
       birthDate,
-      clWins,
-      ulWins,
+      clWins: toWinCount(clWins),
+      ulWins: toWinCount(ulWins),
       admin,
       description,
       profilePictureUrl,
@@ -117,8 +125,8 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
         setNationality("");
         setFavoriteClub("");
         setBirthDate("");
-        setclWins();
-        setulWins();
+        setclWins(0);
+        setulWins(0);
         setAdmin(false);
         setDescription("");
         setProfilePictureUrl("");
