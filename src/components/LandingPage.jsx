@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import countryCodeMap from "../countryCodeMap";
 import { Link } from "react-router-dom";
 import HamburgerMenu from "./HamburgerMenu";
+import axios from "axios";
+import { backendUrl } from "../config";
 
 
 const assignSharedRanks = (data, key) => {
@@ -35,6 +37,26 @@ const LandingPage = ({ players }) => {
   const [modalImage, setModalImage] = useState(null);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [filterType, setFilterType] = useState("totWins"); // Default filter
+  const [statsPlayer, setStatsPlayer] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [statsLoading, setStatsLoading] = useState(false);
+
+  const openStatsModal = async (e, player) => {
+    e.stopPropagation();
+    setStatsPlayer(player);
+    setStats(null);
+    setStatsLoading(true);
+    try {
+      const res = await axios.get(`${backendUrl.replace('/players', `/players/${player._id}/stats`)}`);
+      setStats(res.data);
+    } catch {
+      setStats({ error: true });
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
+  const closeStatsModal = () => { setStatsPlayer(null); setStats(null); };
 
   const openImageModal = (url) => setModalImage(url);
   const closeImageModal = () => setModalImage(null);
@@ -192,8 +214,8 @@ const LandingPage = ({ players }) => {
               </div>
 
               {/* Name, Age, Club */}
-              <div className="flex-1 text-sm">
-                <div className="font-semibold text-base">{player.name}</div>
+              <div className="flex-1 text-sm min-w-0">
+                <div className="font-semibold text-base truncate">{player.name}</div>
                 <div className="text-gray-600 text-xs">
                   Age: {calculateAge(player.birthDate)}
                 </div>
@@ -202,11 +224,10 @@ const LandingPage = ({ players }) => {
                 </div>
               </div>
 
-              {/* Flag with Admin Badge */}
-              <div className="ml-2 flex flex-col items-center">
-                {/* Admin Badge - moved above flag */}
+              {/* Flag with Admin Badge and Stats button */}
+              <div className="ml-2 flex flex-col items-center gap-1">
                 {player.admin && (
-                  <div className="bg-blue-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center mb-1">
+                  <div className="bg-blue-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     S
                   </div>
                 )}
@@ -217,10 +238,121 @@ const LandingPage = ({ players }) => {
                   alt={player.nationality}
                   className="w-6 h-4 object-cover"
                 />
+                <button
+                  onClick={(e) => openStatsModal(e, player)}
+                  className="p-1 rounded bg-gray-100 hover:bg-indigo-100 text-gray-500 hover:text-indigo-700 border border-gray-200 hover:border-indigo-300 transition-colors"
+                >
+                  <span className="flex items-end gap-px h-3.5">
+                    <span className="w-1 rounded-sm bg-purple-500" style={{height:'40%'}} />
+                    <span className="w-1 rounded-sm bg-green-500" style={{height:'70%'}} />
+                    <span className="w-1 rounded-sm bg-blue-500" style={{height:'100%'}} />
+                  </span>
+                </button>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Stats Modal */}
+        {statsPlayer && (
+          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
+              <div className="flex items-center mb-5">
+                <img
+                  src={statsPlayer.profilePictureUrl || "https://i.pravatar.cc/150?img=3"}
+                  alt={statsPlayer.name}
+                  className="w-12 h-12 object-cover rounded-full border mr-3"
+                />
+                <div>
+                  <h3 className="text-lg font-semibold">{statsPlayer.name}</h3>
+                  <p className="text-xs text-gray-500">Season statistics</p>
+                </div>
+              </div>
+
+              {statsLoading && <p className="text-center text-gray-500 py-4">Loading...</p>}
+
+              {!statsLoading && stats?.error && (
+                <p className="text-center text-red-500 py-4">Failed to load stats.</p>
+              )}
+
+              {!statsLoading && stats && !stats.error && (
+                <div className="space-y-4">
+                  {/* Participation */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600 font-medium">Participation rate</span>
+                      <span className="font-bold">{Math.round(stats.participationRate * 100)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div
+                        className="bg-blue-500 h-2 rounded-full"
+                        style={{ width: `${Math.round(stats.participationRate * 100)}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">{stats.sessionsAttended} of {stats.totalSessions} sessions</p>
+                  </div>
+
+                  {/* CL success */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600 font-medium">CL success rate</span>
+                      <span className="font-bold text-green-600">
+                        {stats.clSuccessRate !== null ? `${Math.round(stats.clSuccessRate * 100)}%` : '—'}
+                      </span>
+                    </div>
+                    {stats.clSuccessRate !== null ? (
+                      <>
+                        <div className="w-full bg-gray-100 rounded-full h-2">
+                          <div
+                            className="bg-green-500 h-2 rounded-full"
+                            style={{ width: `${Math.round(stats.clSuccessRate * 100)}%` }}
+                          />
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">{stats.clWins} wins in {stats.sessionsAttended} sessions attended</p>
+                      </>
+                    ) : (
+                      <p className="text-xs text-gray-400">Need {stats.minSessionsForRates - stats.sessionsAttended} more sessions to unlock</p>
+                    )}
+                  </div>
+
+                  {/* EL success */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600 font-medium">EL success rate</span>
+                      <span className="font-bold text-purple-600">
+                        {stats.elSuccessRate !== null ? `${Math.round(stats.elSuccessRate * 100)}%` : '—'}
+                      </span>
+                    </div>
+                    {stats.elSuccessRate !== null ? (
+                      <>
+                        <div className="w-full bg-gray-100 rounded-full h-2">
+                          <div
+                            className="bg-purple-500 h-2 rounded-full"
+                            style={{ width: `${Math.round(stats.elSuccessRate * 100)}%` }}
+                          />
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">{stats.elWins} wins in {stats.elSessionsAttended} EL sessions attended</p>
+                      </>
+                    ) : (
+                      <p className="text-xs text-gray-400">
+                        {stats.sessionsAttended < stats.minSessionsForRates
+                          ? `Need ${stats.minSessionsForRates - stats.sessionsAttended} more sessions to unlock`
+                          : 'No EL sessions attended yet'}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={closeStatsModal}
+                className="mt-6 w-full py-2 px-4 bg-gray-800 hover:bg-gray-900 text-white rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Player Description Modal */}
         {selectedPlayer && (

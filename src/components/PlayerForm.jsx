@@ -147,6 +147,7 @@ const PlayerForm = ({ players, setPlayers, editPlayer, setEditPlayer }) => {
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          maxLength={25}
           className="w-full p-2 border rounded"
           required
         />
