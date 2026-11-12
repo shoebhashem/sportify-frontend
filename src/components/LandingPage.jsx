@@ -61,9 +61,9 @@ const LandingPage = ({ players }) => {
   const pickOldest = (candidates) =>
     candidates.reduce((best, p) => new Date(p.birthDate) < new Date(best.birthDate) ? p : best);
 
-  const maxTotWins = players.length > 0 ? Math.max(...players.map(p => p.totWins)) : 0;
-  const totWinsTied = players.filter(p => p.totWins === maxTotWins && maxTotWins > 0);
-  const ballonDorIds = new Set(totWinsTied.length > 0 ? [pickOldest(totWinsTied)._id] : []);
+  const maxClWins = players.length > 0 ? Math.max(...players.map(p => p.clWins)) : 0;
+  const clWinsTied = players.filter(p => p.clWins === maxClWins && maxClWins > 0);
+  const ballonDorIds = new Set(clWinsTied.length > 0 ? [pickOldest(clWinsTied)._id] : []);
 
   const clRates = Object.entries(allStats)
     .map(([id, s]) => ({ id, rate: s.clSuccessRate }))
