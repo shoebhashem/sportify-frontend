@@ -40,6 +40,39 @@ const LandingPage = ({ players }) => {
   const [statsPlayer, setStatsPlayer] = useState(null);
   const [stats, setStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
+  const [allStats, setAllStats] = useState({});
+
+  // Fetch all stats once on mount for badge rendering
+  React.useEffect(() => {
+    axios.get(backendUrl.replace('/players', '/players/stats/all'))
+      .then(res => setAllStats(res.data))
+      .catch(() => {});
+  }, []);
+
+  // Compute badge holders from current player list + allStats
+  const today = new Date();
+  const birthdayIds = new Set(
+    players.filter(p => {
+      const bd = new Date(p.birthDate);
+      return bd.getMonth() === today.getMonth() && bd.getDate() === today.getDate();
+    }).map(p => p._id)
+  );
+
+  const pickOldest = (candidates) =>
+    candidates.reduce((best, p) => new Date(p.birthDate) < new Date(best.birthDate) ? p : best);
+
+  const maxTotWins = players.length > 0 ? Math.max(...players.map(p => p.totWins)) : 0;
+  const totWinsTied = players.filter(p => p.totWins === maxTotWins && maxTotWins > 0);
+  const ballonDorIds = new Set(totWinsTied.length > 0 ? [pickOldest(totWinsTied)._id] : []);
+
+  const clRates = Object.entries(allStats)
+    .map(([id, s]) => ({ id, rate: s.clSuccessRate }))
+    .filter(x => x.rate !== null);
+  const maxClRate = clRates.length > 0 ? Math.max(...clRates.map(x => x.rate)) : null;
+  const clRateTied = maxClRate !== null
+    ? clRates.filter(x => x.rate === maxClRate).map(x => players.find(p => p._id === x.id)).filter(Boolean)
+    : [];
+  const fireIds = new Set(clRateTied.length > 0 ? [pickOldest(clRateTied)._id] : []);
 
   const openStatsModal = async (e, player) => {
     e.stopPropagation();
@@ -174,9 +207,26 @@ const LandingPage = ({ players }) => {
           {rankedData.map((player) => (
             <div
               key={player._id}
-              className="flex items-center bg-white px-5 py-4 rounded-xl shadow-md w-full cursor-pointer hover:bg-gray-50 transition-colors"
+              className="relative flex items-center bg-white px-5 py-4 rounded-xl shadow-md w-full cursor-pointer hover:bg-gray-50 transition-colors"
               onClick={() => openPlayerModal(player)}
             >
+              {/* Badges: top-right corner */}
+              <div className="absolute top-1.5 right-2 flex items-center gap-1">
+                {ballonDorIds.has(player._id) && (
+                  <img
+                    src="https://fineartfrance.com/cdn/shop/files/3c7f5eb982d543865a2154f680f5af3f_2048x.jpg?v=1773920976"
+                    alt="Ballon d'Or"
+                    className="w-6 h-6 object-cover rounded-full border-2 border-yellow-400 shadow-sm"
+                    title="Leads total wins"
+                  />
+                )}
+                {fireIds.has(player._id) && (
+                  <span className="text-base leading-none" title="Highest CL success rate">🔥</span>
+                )}
+                {birthdayIds.has(player._id) && (
+                  <span className="text-base leading-none" title="Happy birthday!">🎂</span>
+                )}
+              </div>
               {/* Rank and All Wins Types */}
               <div className="text-center text-sm text-gray-600 min-w-fit">
                 <div className="text-lg font-bold text-gray-800 mb-1">
