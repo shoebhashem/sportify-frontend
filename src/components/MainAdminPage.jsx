@@ -3,8 +3,9 @@ import usePlayers from "../hooks/usePlayers";
 import PlayerForm from "./PlayerForm";
 import PlayerCard from "./PlayerCard";
 import AdminSessionsPage from "./AdminSessionsPage";
+import SeasonResetTab from "./SeasonResetTab";
 import { useNavigate } from "react-router-dom";
-import { Users, Calendar } from "lucide-react";
+import { Users, Calendar, RotateCcw } from "lucide-react";
 
 const MainAdminPage = () => {
   const { players, setPlayers, loading, error, deletePlayer } = usePlayers();
@@ -58,6 +59,17 @@ const MainAdminPage = () => {
             <Calendar className="w-5 h-5" />
             Session Management
           </button>
+          <button
+            onClick={() => setActiveTab("reset")}
+            className={`flex items-center gap-2 pb-3 px-2 border-b-2 transition-colors ${
+              activeTab === "reset"
+                ? "border-red-600 text-red-600 font-semibold"
+                : "border-transparent text-gray-600 hover:text-gray-800"
+            }`}
+          >
+            <RotateCcw className="w-5 h-5" />
+            Season Reset
+          </button>
         </div>
       </div>
 
@@ -96,6 +108,11 @@ const MainAdminPage = () => {
           {/* Sessions Tab */}
           {activeTab === "sessions" && (
             <AdminSessionsPage players={players} />
+          )}
+
+          {/* Season Reset Tab */}
+          {activeTab === "reset" && (
+            <SeasonResetTab />
           )}
         </>
       )}

@@ -6,6 +6,7 @@ import MainAdminPage from "./components/MainAdminPage";
 import AboutPage from "./components/AboutPage";
 import SessionsPage from "./components/SessionsPage";
 import HistoryPage from "./components/HistoryPage";
+import PastSeasonsPage from "./components/PastSeasonsPage";
 import usePlayers from "./hooks/usePlayers";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/sessions" element={<SessionsPage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/past-seasons" element={<PastSeasonsPage />} />
         <Route path="/admin-login" element={<AdminLoginPage setIsAuthenticated={setIsAuthenticated} />} />
         <Route
           path="/admin"

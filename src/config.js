@@ -6,7 +6,13 @@ const LAMBDA_API_URL = "https://welv4ub46l.execute-api.eu-north-1.amazonaws.com/
 
 const backendUrl =
   import.meta.env.MODE === "production"
-    ? LAMBDA_API_URL  // Now using Lambda instead of EC2
-    : "http://localhost:5000/api/players"; // Keep localhost for development
+    ? LAMBDA_API_URL
+    : "http://localhost:5000/api/players";
 
-export { backendUrl };
+// Base URL without the /api/players suffix — use for non-player routes
+const baseUrl =
+  import.meta.env.MODE === "production"
+    ? "https://welv4ub46l.execute-api.eu-north-1.amazonaws.com/prod"
+    : "http://localhost:5000";
+
+export { backendUrl, baseUrl };

@@ -74,6 +74,13 @@ const LandingPage = ({ players }) => {
     : [];
   const fireIds = new Set(clRateTied.length > 0 ? [pickOldest(clRateTied)._id] : []);
 
+  // Golden card: CL success rate > 50% (requires ≥10 sessions, so null means not qualified)
+  const goldenIds = new Set(
+    Object.entries(allStats)
+      .filter(([, s]) => s.clSuccessRate !== null && s.clSuccessRate > 0.5)
+      .map(([id]) => id)
+  );
+
   const openStatsModal = async (e, player) => {
     e.stopPropagation();
     setStatsPlayer(player);
@@ -204,10 +211,22 @@ const LandingPage = ({ players }) => {
         </p>
 
         <div className="space-y-4">
-          {rankedData.map((player) => (
+          {rankedData.map((player) => {
+            const isGolden = goldenIds.has(player._id);
+            return (
             <div
               key={player._id}
-              className="relative flex items-center bg-white px-5 py-4 rounded-xl shadow-md w-full cursor-pointer hover:bg-gray-50 transition-colors"
+              className={isGolden
+                ? "p-[2px] rounded-xl bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-lg shadow-amber-300/50"
+                : ""
+              }
+            >
+            <div
+              className={`relative flex items-center px-5 py-4 rounded-xl w-full cursor-pointer transition-colors ${
+                isGolden
+                  ? "bg-gradient-to-br from-amber-50 to-white hover:from-amber-100/80 hover:to-amber-50/50 shadow-none"
+                  : "bg-white shadow-md hover:bg-gray-50"
+              }`}
               onClick={() => openPlayerModal(player)}
             >
               {/* Badges: top-right corner */}
@@ -300,7 +319,9 @@ const LandingPage = ({ players }) => {
                 </button>
               </div>
             </div>
-          ))}
+            </div>
+            );
+          })}
         </div>
 
         {/* Stats Modal */}

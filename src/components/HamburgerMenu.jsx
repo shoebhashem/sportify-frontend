@@ -56,6 +56,13 @@ const HamburgerMenu = () => {
             Admin
           </Link>
           <Link
+            to="/past-seasons"
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Past Seasons
+          </Link>
+          <Link
             to="/about"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
             onClick={() => setIsOpen(false)}
